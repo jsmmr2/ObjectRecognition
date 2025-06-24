@@ -12,8 +12,10 @@ import org.tensorflow.types.TInt32;
 public class HelloTensorFlow {
 
   public static void main(String[] args) throws Exception {
+    // Prints out tensorflow version
     System.out.println("Hello TensorFlow " + TensorFlow.version());
 
+    // Creates a ConcreteFunction object called dbl from
     try (ConcreteFunction dbl = ConcreteFunction.create(HelloTensorFlow::dbl);
         TInt32 x = TInt32.scalarOf(10);
         Tensor dblX = dbl.call(x)) {

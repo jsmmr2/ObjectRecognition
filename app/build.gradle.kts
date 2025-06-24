@@ -38,7 +38,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.HelloTensorFlow"
+    mainClass = "org.example.ObjectRecognition"
 }
 
 tasks.named<Test>("test") {
