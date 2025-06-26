@@ -1,0 +1,1 @@
+python3 -m tensorflow.python.tools.saved_model_cli show --dir C:\Users\jts70\Documents\Personal\ObjectRecognition\app\src\main\java\org\example\exported_model_dir --all
