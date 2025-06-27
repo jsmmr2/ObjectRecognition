@@ -2,7 +2,6 @@ package org.example;
 
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.opencv.opencv_java;
-import org.bytedeco.opencv.global.opencv_core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -21,16 +20,16 @@ public class ObjectRecognition {
         // System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
         Loader.load(opencv_java.class);
     }
-
+    static String[] classes = {"1", "2", "3", "4", "automobile", "6", "cat", "7", "8", "9"};
     public static void main(String[] args) {
         // Mat originalImage = new Mat();
         // try {
-            // Gets image from file and keeps an original
-            Mat originalImage = Imgcodecs.imread(
-                    "C:/Users/jts70/Documents/Personal/ObjectRecognition/app/src/main/java/org/example/test_image.png");
+        // Gets image from file and keeps an original
+        Mat originalImage = Imgcodecs.imread(
+                "C:/Users/jts70/Documents/Personal/ObjectRecognition/app/src/main/java/org/example/frog-1.jpg");
         // } catch (UnsatisfiedLinkError error) {
-        //     error.printStackTrace();
-        //     System.out.println("Native lib loaded? " + opencv_core.getVersionString());
+        // error.printStackTrace();
+        // System.out.println("Native lib loaded? " + opencv_core.getVersionString());
 
         // }
         Mat image = originalImage;
@@ -60,13 +59,16 @@ public class ObjectRecognition {
                 result[idx++] = (float) pixel[0]; // B
             }
         }
+        // System.out.println("Result length: " + result.length);
+        // System.out.println(result[1000] + " " + result[1001] + " " + result[1002]);
         // Creates a tensor. Yippee (I have no clue what I'm doing, this is all new to
         // me)
         TFloat32 input = TFloat32.tensorOf(Shape.of(1, 32, 32, 3), data -> data.write(DataBuffers.of(result)));
 
         // Let's load a model (Unsure what the "serve" bit does)
         SavedModelBundle model = SavedModelBundle
-                .load("C:/Users/jts70/Documents/Personal/ObjectRecognition/app/src/main/java/org/example/exported_model_dir", "serve");
+                .load("C:/Users/jts70/Documents/Personal/ObjectRecognition/app/src/main/java/org/example/exported_model_dir",
+                        "serve");
 
         // Feeds in input, fetches output from the model
         Result outputs = model.session().runner()
@@ -79,10 +81,16 @@ public class ObjectRecognition {
             float[][] out = new float[1][10]; // adjust shape if needed
 
             NdArray<Float> tensorResult = NdArrays.ofFloats(Shape.of(1, 10));
+            // float[] tensorResultFloat = new float[10];
             output.copyTo(tensorResult);
 
-            for (int i = 0; i < out[0].length; i++) {
-                System.out.printf("Class %d: %.4f\n", i, out[0][i]);
+            // for (int i = 0; i < out[0].length; i++) {
+            // System.out.printf("Class %d: %.4f\n", i, out[0][i]);
+            // }
+
+            for (int i = 0 ; i < 10; i++) {
+                float value = tensorResult.getObject(0, i);
+                System.out.printf("Class %s: %.4f\n", classes[i], value);
             }
         }
     }
